@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangoTango.Api", "MangoTango.Api\MangoTango.Api.csproj", "{19B576F1-A392-402C-8392-8AEE2830D890}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19B576F1-A392-402C-8392-8AEE2830D890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B576F1-A392-402C-8392-8AEE2830D890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B576F1-A392-402C-8392-8AEE2830D890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B576F1-A392-402C-8392-8AEE2830D890}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C21D02A-79CC-44B0-A4CD-1068BEBBA2AA}
+	EndGlobalSection
+EndGlobal

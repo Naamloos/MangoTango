@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  mangotango-web:
+    build: ./frontend/.
+    restart: unless-stopped
+    #ports:
+      #- "25565:25565" #Preferrably run this behind nginx
+    environment:
+      - REACT_APP_API_ENDPOINT=http://mangotango-api:80
+      - REACT_APP_NAME=MyServer
+      - REACT_APP_DESCRIPTION=MyServer is a Whitelisted server ❤️
+      - REACT_APP_MINECRAFT_IP=127.0.0.1
+  mangotango-api:
+    build: ./backend/.
+    restart: unless-stopped
+    #ports:
+      #- "80:80" #again, nginx please
+    environment:
+      - RCON_HOST=127.0.0.1
+      - RCON_PORT=25575
+      - RCON_PASS=password
+      - SERVER_DATA_PATH=/var/minecraft
+    volumes:
+      - minecraft_volume:/var/minecraft # Binding so we can find whitelist.json
