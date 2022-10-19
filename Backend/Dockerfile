@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-COPY ./MangoTango.Api ./src
-RUN dotnet restore && dotnet publish --no-restore -c Release -o out --project ./src/MangoTango.Api.csproj
+WORKDIR .
+COPY ./MangoTango.Api ./
+RUN dotnet restore && dotnet publish --no-restore -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
