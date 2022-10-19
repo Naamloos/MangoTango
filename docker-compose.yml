@@ -4,6 +4,7 @@ services:
   mangotango-web:
     build: ./frontend/.
     restart: unless-stopped
+    hostname: mangotango-web
     #ports:
       #- "25565:25565" #Preferrably run this behind nginx
     environment:
@@ -11,9 +12,13 @@ services:
       - REACT_APP_NAME=MyServer
       - REACT_APP_DESCRIPTION=MyServer is a Whitelisted server ❤️
       - REACT_APP_MINECRAFT_IP=127.0.0.1
+    networks:
+      - mangotango-net
+
   mangotango-api:
     build: ./backend/.
     restart: unless-stopped
+    hostname: mangotango-api
     #ports:
       #- "80:80" #again, nginx please
     environment:
@@ -23,3 +28,9 @@ services:
       - SERVER_DATA_PATH=/var/minecraft
     volumes:
       - minecraft_volume:/var/minecraft # Binding so we can find whitelist.json
+    networks:
+      - mangotango-net
+
+networks:
+  mangotango-net:
+    external: true
