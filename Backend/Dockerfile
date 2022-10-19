@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-RUN ls
+RUN ls | echo
 COPY ./MangoTango.Api ./
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
