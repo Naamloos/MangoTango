@@ -4,6 +4,6 @@ RUN dotnet restore && dotnet publish --no-restore -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=build /src/out .
+COPY --from=build /out .
 WORKDIR /config
 ENTRYPOINT ["dotnet", "/app/MangoTango.Api.dll"]
