@@ -15,7 +15,7 @@ class App extends React.Component
       is_bedrock_player: false,
       motivation: '',
       contact: '',
-      referer: '',
+      referrer: '',
       password: '',
       authenticated: false,
       requests: [],
@@ -100,8 +100,8 @@ class App extends React.Component
               </Form.Floating>
   
               <Form.Floating className="mb-3">
-                <Form.Control id='referer' type='text' placeholder='' onChange={this.handleInput.bind(this)}/>
-                <Form.Label htmlFor='referer'>Who invited you?</Form.Label>
+                <Form.Control id='referrer' type='text' placeholder='' onChange={this.handleInput.bind(this)}/>
+                <Form.Label htmlFor='referrer'>Who invited you?</Form.Label>
               </Form.Floating>
               <Form.Control type='submit' value="Submit Whitelist Request"/>
             </FormGroup>
@@ -137,7 +137,7 @@ class App extends React.Component
                         </Card.Text>
                       </Card.Body>
                       <ListGroup className="list-group-flush">
-                        <ListGroup.Item><b>Referrer member:</b> {request.referer}</ListGroup.Item>
+                        <ListGroup.Item><b>referrer member:</b> {request.referrer}</ListGroup.Item>
                         <ListGroup.Item><b>Contact info:</b> {request.contact}</ListGroup.Item>
                         <ListGroup.Item><b>Edition:</b> {request.is_bedrock_player? "Bedrock" : "Java"}</ListGroup.Item>
                         <ListGroup.Item><b>UUID:</b> {request.uuid}</ListGroup.Item>
@@ -180,7 +180,7 @@ class App extends React.Component
     var req = 
     {
       username: this.state.username,
-      referer: this.state.referer,
+      referrer: this.state.referrer,
       motivation: this.state.motivation,
       contact: this.state.contact,
       is_bedrock_player: this.state.is_bedrock_player === 'true'
