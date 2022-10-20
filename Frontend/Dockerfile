@@ -1,10 +1,21 @@
-FROM node:16.15.0-alpine3.15 as build
+# pull official base image
+FROM node:16.15.0-alpine3.15
+
+# set working directory
 WORKDIR /app
-COPY . .
 
-RUN npm ci
-RUN npm run build
-
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
 ENV NODE_ENV production
 
-CMD ["npx", "serve", "build"]
+# install app dependencies
+COPY package.json /app/
+COPY package-lock.json /app/
+RUN npm install --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+
+# add app
+COPY . ./
+
+# start app
+CMD ["npm", "start"]
