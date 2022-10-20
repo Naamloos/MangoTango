@@ -1,5 +1,5 @@
 # 😸 MangoTango
-A simple web panel for Minecraft servers using Geyser+Floodgate users to handle whitelist requests for both Java and Bedrock players.
+A simple web panel for Minecraft servers using Geyser+Floodgate to handle whitelist requests for both Java and Bedrock players.
 
 This application was initially written in about half a day.
 
