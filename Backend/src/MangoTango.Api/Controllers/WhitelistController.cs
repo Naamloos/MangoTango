@@ -58,9 +58,10 @@ namespace MangoTango.Api.Controllers
                 return resolved;
             }finally
             {
+                var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
                 await minecraft.ConnectAsync();
-                var title = $"/tellraw @a [\"\",{{\"text\":\"{request.Username}\",\"italic\":true,\"color\":\"light_purple\"}}," +
-                $"{{\"text\":\" heeft een whitelist verzoek ingediend!\",\"color\":\"white\"}}]";
+                var title = $"/tellraw @a [\"\",{{\"text\":\"{username}\",\"italic\":true,\"color\":\"light_purple\"}}," +
+                $"{{\"text\":\" has just requested whitelist access.\",\"color\":\"white\"}}]";
                 await minecraft.SendCommandAsync(title);
             }
         }
@@ -80,9 +81,11 @@ namespace MangoTango.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound, "No such request found! Has this user already been approved?");
             }
 
+            var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
+
             await _whitelistManager.AddUserAsync(new WhitelistUser()
             {
-                Username = (request.IsBedrockPlayer? "." : "") + request.Username,
+                Username = username,
                 Uuid = request.Uuid
             });
 
@@ -92,8 +95,8 @@ namespace MangoTango.Api.Controllers
 
             await minecraft.SendCommandAsync("/whitelist reload");
 
-            var title = $"/tellraw @a [\"\",{{\"text\":\"{uuid}\",\"italic\":true,\"color\":\"light_purple\"}}," +
-                $"{{\"text\":\" is zojuist aan de whitelist toegevoegd! Welkom!\",\"color\":\"gold\"}}]";
+            var title = $"/tellraw @a [\"\",{{\"text\":\"{username}\",\"italic\":true,\"color\":\"light_purple\"}}," +
+                $"{{\"text\":\" was just added to the whitelist! Welcome!\",\"color\":\"gold\"}}]";
 
             await minecraft.SendCommandAsync(title);
         }
