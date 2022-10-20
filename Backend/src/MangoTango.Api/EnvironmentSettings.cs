@@ -10,6 +10,8 @@ namespace MangoTango.Api
 
         public static string RconPassword => Environment.GetEnvironmentVariable("RCON_PASS") ?? "123";
 
+        public static string CorsOrigin => Environment.GetEnvironmentVariable("CORS_ORIGIN") ?? "*";
+
         public static string ServerDataPath
         {
             get 
