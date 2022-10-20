@@ -46,7 +46,14 @@ namespace MangoTango.Api.Controllers
             }
 
             var whitelist = await _whitelistManager.GetWhitelistAsync();
-            if (whitelist.Any(x => x.Username.ToLower().Replace(".", "") == request.Username.ToLower()))
+            var exists = false;
+
+            if (request.IsBedrockPlayer)
+                exists = whitelist.Any(x => x.Username.ToLower() == ("." + request.Username.ToLower()));
+            else
+                exists = whitelist.Any(x => x.Username.ToLower() == request.Username.ToLower());
+
+            if (exists)
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
