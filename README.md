@@ -20,6 +20,8 @@ MangoTango requires some setup to get working properly. As of right now, I only 
 8. Give internet access to the API. `docker network connect bridge mangotango-mangotango-api`
 9. Done! You should be up and running. You can for example use NGINX to reverse proxy to `mangotango-api` for the api and `mangotango-web` for the web panel.
 
+MangoTango does _not_ provide any prebuilt images, due to react injecting environment variables in the build step. Providing prebuilt images would remove the customizability of the front end.
+
 ### ❓ Example NGINX configuration
 Do take note that it is generally not a good idea to host your services behind port 80! Make sure to either serve your site over HTTPS or have cloudflare as a proxy.
 ```nginx
