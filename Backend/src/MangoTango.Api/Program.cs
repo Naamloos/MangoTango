@@ -81,6 +81,8 @@ namespace MangoTango.Api
 
             app.MapControllers();
 
+            app.UseRouting();
+
             app.UseCors("_allowAll");
 
             app.Run();
