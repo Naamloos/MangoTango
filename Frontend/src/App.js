@@ -117,7 +117,7 @@ class App extends React.Component
               <p>To remove members, use the <code>/whitelist remove [PLAYER]</code> command.</p>
               <ListGroup>
                 {
-                  this.state.whitelist.map(player => 
+                  Array.from(this.state.whitelist).map(player => 
                     <ListGroup.Item>{player}</ListGroup.Item>
                   )
                 }
@@ -127,7 +127,7 @@ class App extends React.Component
               <h3>Current requests</h3>
               {this.state.requests.length < 1? <p>None right now.</p> : <></>}
               {
-                this.state.requests.map(request => 
+                Array.from(this.state.requests).map(request => 
                   <>
                     <Card className='mb-3' style={{ width: '100%'}}>
                       <Card.Body>
