@@ -52,7 +52,11 @@ namespace MangoTango.Api
 
             builder.Services.AddInMemoryRateLimiting();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<HttpResponseExceptionFilter>();
+            });
+
             builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

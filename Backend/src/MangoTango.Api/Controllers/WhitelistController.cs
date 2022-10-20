@@ -28,8 +28,7 @@ namespace MangoTango.Api.Controllers
         {
             if (rcon_password != EnvironmentSettings.RconPassword)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
             }
 
             return await _requestManager.GetRequestsAsync();
@@ -43,16 +42,14 @@ namespace MangoTango.Api.Controllers
             var requests = await _requestManager.GetRequestsAsync();
             if(requests.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
             {
-                Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return null;
+                throw new HttpResponseException(HttpStatusCode.Conflict, "You have already requested whitelist access!");
             }
 
             var whitelist = await _whitelistManager.GetWhitelistAsync();
 
             if (whitelist.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
             {
-                Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return null;
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "You have already been whitelisted!");
             }
 
             try
@@ -73,16 +70,14 @@ namespace MangoTango.Api.Controllers
         {
             if(rcon_password != EnvironmentSettings.RconPassword)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return;
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
             }
 
             var requests = await _requestManager.GetRequestsAsync();
             var request = requests.FirstOrDefault(x => x.Uuid == uuid);
             if(request == null)
             {
-                this.Response.StatusCode = 404;
-                return;
+                throw new HttpResponseException(HttpStatusCode.NotFound, "No such request found! Has this user already been approved?");
             }
 
             await _whitelistManager.AddUserAsync(new WhitelistUser()
@@ -108,16 +103,14 @@ namespace MangoTango.Api.Controllers
         {
             if (rcon_password != EnvironmentSettings.RconPassword)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return;
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
             }
 
             var requests = await _requestManager.GetRequestsAsync();
             var request = requests.FirstOrDefault(x => x.Uuid == uuid);
             if (request == null)
             {
-                this.Response.StatusCode = 404;
-                return;
+                throw new HttpResponseException(HttpStatusCode.NotFound, "No such request found! Has this user already been approved?");
             }
 
             await _requestManager.RemoveRequestAsync(uuid);
