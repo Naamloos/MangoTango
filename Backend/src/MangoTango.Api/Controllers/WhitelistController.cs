@@ -39,22 +39,23 @@ namespace MangoTango.Api.Controllers
         public async Task<ResolvedWhitelistRequest> PostRequestAsync(WhitelistRequest request, [FromServices] RCON minecraft, [FromServices]IMemoryCache cache)
         {
             var requests = await _requestManager.GetRequestsAsync();
-            if(requests.Any(x => x.Username == request.Username))
+            if(requests.Any(x => x.Username.ToLower() == request.Username.ToLower()))
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
             }
 
             var whitelist = await _whitelistManager.GetWhitelistAsync();
-            if (whitelist.Any(x => x.Username == request.Username))
+            if (whitelist.Any(x => x.Username.ToLower().Replace(".", "") == request.Username.ToLower()))
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
             }
 
+            var resolved = await ResolvedWhitelistRequest.FromRequestAsync(request, cache);
+
             try
             {
-                var resolved = await ResolvedWhitelistRequest.FromRequestAsync(request, cache);
                 await _requestManager.AddRequestAsync(resolved);
                 return resolved;
             }finally
