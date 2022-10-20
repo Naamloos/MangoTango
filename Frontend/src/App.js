@@ -274,9 +274,7 @@ class App extends React.Component {
       });
 
       if (resp.status !== 200) {
-        if (resp.headers.get("Content-Type") === "text/plain")
-          throw new Error(await resp.text());
-        else throw new Error("Something went wrong!");
+        throw new Error(await resp.text());
       }
 
       var jsonresp = await resp.json();
@@ -298,9 +296,7 @@ class App extends React.Component {
       });
 
       if (resp.status !== 200) {
-        if (resp.headers.get("Content-Type") === "text/plain")
-          throw new Error(await resp.text());
-        else throw new Error("Something went wrong!");
+        throw new Error(await resp.text());
       }
 
       var list = await resp.json();
@@ -321,9 +317,7 @@ class App extends React.Component {
         method: "POST",
       });
       if (resp.status !== 200) {
-        if (resp.headers.get("Content-Type") === "text/plain")
-          throw new Error(await resp.text());
-        else throw new Error("Something went wrong!");
+        throw new Error(await resp.text());
       }
       alert("Approved whitelist access for " + request.username);
       await this.FetchRequests(e);
@@ -343,9 +337,7 @@ class App extends React.Component {
         method: "POST",
       });
       if (resp.status !== 200) {
-        if (resp.headers.get("Content-Type") === "text/plain")
-          throw new Error(await resp.text());
-        else throw new Error("Something went wrong!");
+        throw new Error(await resp.text());
       }
       alert("Denied whitelist access for " + request.username);
       await this.FetchRequests(e);
