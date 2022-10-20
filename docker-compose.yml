@@ -1,17 +1,11 @@
 version: "3.9"
 
 services:
-  mangotango-web:
+  mangotango-web: # Do not forget to modfy .env!
     build:
       context: ./Frontend
       dockerfile: Dockerfile
     restart: unless-stopped
-    hostname: mangotango-web
-    environment:
-      - REACT_APP_API_ENDPOINT=http://whitelist-api # Points to your web-facing endpoint
-      - REACT_APP_NAME="My Server"
-      - REACT_APP_DESCRIPTION="Whitelisted SMP"
-      - REACT_APP_MINECRAFT_IP=173.212.202.108 # Only for display on the web page
     networks:
       - nginx-network
 
