@@ -44,8 +44,7 @@ namespace MangoTango.Api
                 options.AddPolicy(name: "_allowAll",
                                   policy =>
                                   {
-                                      policy.WithOrigins("*")
-                                      .WithHeaders(HeaderNames.ContentType, "rcon_password");
+                                      policy.WithOrigins("*");
                                   });
             });
 
