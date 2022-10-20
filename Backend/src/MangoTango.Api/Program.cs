@@ -44,7 +44,9 @@ namespace MangoTango.Api
                 options.AddPolicy(name: "_allowAll",
                                   policy =>
                                   {
-                                      policy.WithOrigins(EnvironmentSettings.CorsOrigin);
+                                      policy.WithOrigins(EnvironmentSettings.CorsOrigin)
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
                                   });
             });
 
