@@ -18,7 +18,6 @@ COPY . ./
 
 RUN npm install serve -g
 RUN npm run build
-RUN serve -s build
 
 # start app
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build"]
