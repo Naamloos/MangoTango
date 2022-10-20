@@ -38,8 +38,10 @@ namespace MangoTango.Api.Controllers
         [HttpPost("request")]
         public async Task<ResolvedWhitelistRequest> PostRequestAsync(WhitelistRequest request, [FromServices] RCON minecraft, [FromServices]IMemoryCache cache)
         {
+            var resolved = await ResolvedWhitelistRequest.FromRequestAsync(request, cache);
+
             var requests = await _requestManager.GetRequestsAsync();
-            if(requests.Any(x => x.Username?.ToLower() == request.Username?.ToLower()))
+            if(requests.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
@@ -48,18 +50,11 @@ namespace MangoTango.Api.Controllers
             var whitelist = await _whitelistManager.GetWhitelistAsync();
             var exists = false;
 
-            if (request.IsBedrockPlayer)
-                exists = whitelist.Any(x => x.Username?.ToLower() == ("." + request.Username?.ToLower()));
-            else
-                exists = whitelist.Any(x => x.Username?.ToLower() == request.Username?.ToLower());
-
-            if (exists)
+            if (whitelist.Any(x => x.Uuid?.ToLower() == ("." + resolved.Uuid?.ToLower())))
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
             }
-
-            var resolved = await ResolvedWhitelistRequest.FromRequestAsync(request, cache);
 
             try
             {
