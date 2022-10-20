@@ -85,5 +85,9 @@ Example can be seen in the example NGINX config above.
 ## 📸 Screenshots (as of the 20th of October, 2022)
 ### Unauthenticated view
 ![afbeelding](https://user-images.githubusercontent.com/12187179/196905103-167d2f40-249e-44b1-af3c-3c0526e6f6a3.png)
+### Client-side form validation
+![image](https://user-images.githubusercontent.com/12187179/197080181-ef2753b2-58ed-432a-a4f2-3508ffa8f583.png)
 ### After Authentication, requests appear under the form
 ![afbeelding](https://user-images.githubusercontent.com/12187179/196904836-3d594a90-3f96-41e8-99c6-42eefb435f1d.png)
+### In-game notifications
+![image](https://user-images.githubusercontent.com/12187179/197080369-f92cab36-3c2b-4c75-ad87-1d14185ba605.png)
