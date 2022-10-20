@@ -12,6 +12,8 @@ namespace MangoTango.Api
 
         public static string CorsOrigin => Environment.GetEnvironmentVariable("CORS_ORIGIN") ?? "*";
 
+        public static string BasePath => Environment.GetEnvironmentVariable("BASE_PATH") ?? "/";
+
         public static string ServerDataPath
         {
             get 

@@ -65,6 +65,8 @@ namespace MangoTango.Api
 
             var app = builder.Build();
 
+            app.UsePathBase(EnvironmentSettings.BasePath);
+
             app.UseIpRateLimiting();
 
             // Configure the HTTP request pipeline.
