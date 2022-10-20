@@ -48,6 +48,31 @@ server
 }
 ```
 
+### ❓ Example NGINX configuration using subpaths
+Do make sure to correctly set the `PUBLIC_URL` env variable for the front end, and the `BASE_URI` environment variable for the back end and again, it is probably a good idea to serve your pages over HTTPS 🙂
+```nginx
+server
+{
+    listen 80;
+    server_name whitelist.example.org;
+    location /whitelist/api/
+    {
+        rewrite ^/whitelist/api/(.*)$ /$1 break;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_pass http://mangotango-api;
+    }
+
+    location /whitelist/
+    {
+        rewrite ^/whitelist/(.*)$ /$1 break;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_pass http://mangotango-web:3000;
+    }
+}
+```
+
 #### ⚠️ NGINX note!
 MangoTango uses a header named `rcon_password` to authenticate! 
 NGINX does not allow underscores in headers by default, so you will have to add `underscores_in_headers on;` to your NGINX server declaration.
