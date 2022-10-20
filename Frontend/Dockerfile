@@ -8,6 +8,11 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 ENV NODE_ENV production
 
+ENV REACT_APP_API_ENDPOINT http://surface-web-api-link
+ENV REACT_APP_NAME MyServer
+ENV REACT_APP_DESCRIPTION MyServer is a Whitelisted server
+ENV REACT_APP_MINECRAFT_IP 127.0.0.1
+
 # install app dependencies
 COPY package.json /app/
 COPY package-lock.json /app/
