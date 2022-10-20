@@ -49,7 +49,7 @@ server
 
 #### ⚠️ NGINX note!
 MangoTango uses a header named `rcon_password` to authenticate! 
-NGINX does not allow underscode headers by default, so you will have to add `underscores_in_headers on;` to your NGINX server declaration.
+NGINX does not allow underscores in headers by default, so you will have to add `underscores_in_headers on;` to your NGINX server declaration.
 Example can be seen in the example NGINX config above.
 
 ## Screenshots (as of the 20th of October, 2022)
