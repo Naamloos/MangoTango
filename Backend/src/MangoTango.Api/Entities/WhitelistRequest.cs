@@ -79,7 +79,7 @@ namespace MangoTango.Api.Entities
         private static async Task<string> GetBedrockUuidAsync(string username)
         {
             var http = new HttpClient();
-            var data = await http.GetAsync($"https://xbl-api.prouser123.me/xuid/{username}");
+            var data = await http.GetAsync($"https://api.geysermc.org/v2/xbox/xuid/{username}");
 
             if (data.StatusCode != HttpStatusCode.OK)
                 throw new Exception("Invalid Xbox Username");
