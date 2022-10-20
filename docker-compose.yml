@@ -17,13 +17,13 @@ services:
     restart: unless-stopped
     hostname: mangotango-api
     environment:
-      - RCON_HOST=minecraft-server-host
-      - RCON_PORT=25575
-      - RCON_PASS=password
-      - SERVER_DATA_PATH=/var/minecraft
-      - CORS_ORIGIN=https://full-uri
+      - RCON_HOST=minecraft-server-host # CHANGEME This is the hostname or IP for your minecraft server's RCON
+      - RCON_PORT=25575 # CHANGEME Your RCON port
+      - RCON_PASS=password # CHANGEME Your RCON password
+      - CORS_ORIGIN=https://full-uri # CHANGEME The surface web url you'll use for your front end.
+      - SERVER_DATA_PATH=/var/minecraft # You probably wouldn't want to modify this. We're mapping this to a volume.
     volumes:
-      - minecraft-data:/var/minecraft # Binding so we can find whitelist.json
+      - minecraft-data:/var/minecraft # Binding to minecraft data directory so we can find whitelist.json
     networks: # Requires manually adding to bridge.
       - nginx-network
       - minecraft-network 
@@ -31,12 +31,12 @@ services:
 networks:
   nginx-network:
     external: true
-    name: nginx # your web network
+    name: nginx # CHANGEME Your reverse proxy's network
   minecraft-network:
     external: true
-    name: minecraft
+    name: minecraft # CHANGEME Your minecraft server's network
 
 volumes:
   minecraft-data:
     external: true
-    name: minecraft #Volume name of your external volume
+    name: minecraft # CHANGEME Volume name of your minecraft data volume
