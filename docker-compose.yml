@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   mangotango-web: # Do not forget to modfy .env!
+    hostname: mangotango-web
     build:
       context: ./Frontend
       dockerfile: Dockerfile
@@ -16,19 +17,24 @@ services:
     restart: unless-stopped
     hostname: mangotango-api
     environment:
-      - RCON_HOST=173.212.202.108
+      - RCON_HOST=minecraft-server-host
       - RCON_PORT=25575
       - RCON_PASS=password
       - SERVER_DATA_PATH=/var/minecraft
+      - CORS_ORIGIN=https://full-uri
     volumes:
       - minecraft-data:/var/minecraft # Binding so we can find whitelist.json
-    networks:
+    networks: # Requires manually adding to bridge.
       - nginx-network
+      - minecraft-network 
 
 networks:
   nginx-network:
     external: true
     name: nginx # your web network
+  minecraft-network:
+    external: true
+    name: minecraft
 
 volumes:
   minecraft-data:
