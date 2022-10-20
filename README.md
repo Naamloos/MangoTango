@@ -5,6 +5,8 @@ This application was initially written in about half a day.
 
 This application is called after my Minecraft server that is as well called MangoTango. That server is named after one of my cats though 🙂
 
+[Support Discord `#mangotango`](https://discord.gg/hMRWUTa)
+
 ## 🛠️ Setup
 MangoTango requires some setup to get working properly. As of right now, I only _officially_ support docker-compose setups. The application _should_ work outside of docker as well.
 
