@@ -85,7 +85,7 @@ namespace MangoTango.Api.Entities
                 throw new Exception("Invalid Xbox Username");
 
             var json = JsonObject.Parse(await data.Content.ReadAsStringAsync());
-            var uuid = long.Parse(json["xuid"].GetValue<string>()).ToString("X").PadLeft(32, '0');
+            var uuid = json["xuid"].GetValue<long>().ToString("X").PadLeft(32, '0');
 
             // Conversion to valid uuid for floodgate
             return new Guid(uuid).ToString();
