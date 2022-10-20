@@ -137,7 +137,7 @@ class App extends React.Component
                         </Card.Text>
                       </Card.Body>
                       <ListGroup className="list-group-flush">
-                        <ListGroup.Item><b>referrer member:</b> {request.referrer}</ListGroup.Item>
+                        <ListGroup.Item><b>Referrer member:</b> {request.referrer}</ListGroup.Item>
                         <ListGroup.Item><b>Contact info:</b> {request.contact}</ListGroup.Item>
                         <ListGroup.Item><b>Edition:</b> {request.is_bedrock_player? "Bedrock" : "Java"}</ListGroup.Item>
                         <ListGroup.Item><b>UUID:</b> {request.uuid}</ListGroup.Item>
