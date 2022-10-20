@@ -48,9 +48,8 @@ namespace MangoTango.Api.Controllers
             }
 
             var whitelist = await _whitelistManager.GetWhitelistAsync();
-            var exists = false;
 
-            if (whitelist.Any(x => x.Uuid?.ToLower() == ("." + resolved.Uuid?.ToLower())))
+            if (whitelist.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
             {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
