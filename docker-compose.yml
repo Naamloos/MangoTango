@@ -2,35 +2,41 @@ version: "3.9"
 
 services:
   mangotango-web:
-    build: ./frontend/.
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
     restart: unless-stopped
     hostname: mangotango-web
-    #ports:
-      #- "25565:25565" #Preferrably run this behind nginx
     environment:
-      - REACT_APP_API_ENDPOINT=http://mangotango-api:80
-      - REACT_APP_NAME=MyServer
-      - REACT_APP_DESCRIPTION=MyServer is a Whitelisted server ❤️
-      - REACT_APP_MINECRAFT_IP=127.0.0.1
+      - REACT_APP_API_ENDPOINT=http://whitelist-api # Points to your web-facing endpoint
+      - REACT_APP_NAME="My Server"
+      - REACT_APP_DESCRIPTION="Whitelisted SMP"
+      - REACT_APP_MINECRAFT_IP=173.212.202.108 # Only for display on the web page
     networks:
-      - mangotango-net
+      - nginx-network
 
   mangotango-api:
-    build: ./backend/.
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
     restart: unless-stopped
     hostname: mangotango-api
-    #ports:
-      #- "80:80" #again, nginx please
     environment:
-      - RCON_HOST=127.0.0.1
+      - RCON_HOST=173.212.202.108
       - RCON_PORT=25575
       - RCON_PASS=password
       - SERVER_DATA_PATH=/var/minecraft
     volumes:
-      - minecraft_volume:/var/minecraft # Binding so we can find whitelist.json
+      - minecraft-data:/var/minecraft # Binding so we can find whitelist.json
     networks:
-      - mangotango-net
+      - nginx-network
 
 networks:
-  mangotango-net:
+  nginx-network:
     external: true
+    name: nginx # your web network
+
+volumes:
+  minecraft-data:
+    external: true
+    name: minecraft #Volume name of your external volume
