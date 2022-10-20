@@ -81,21 +81,21 @@ class App extends React.Component {
 
               <div className="mb-3">
                 <Form.Check
+                  required
                   name="bedrock"
                   type="radio"
                   label="Java Edition"
                   id="is_bedrock_player"
-                  checked={!this.state.is_bedrock_player}
                   onChange={this.handleRadio.bind(this)}
                   value={false}
                 />
 
                 <Form.Check
+                  required
                   name="bedrock"
                   type="radio"
                   label="Bedrock Edition"
                   id="is_bedrock_player"
-                  checked={this.state.is_bedrock_player}
                   onChange={this.handleRadio.bind(this)}
                   value={true}
                 />
