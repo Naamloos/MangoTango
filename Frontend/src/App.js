@@ -20,7 +20,8 @@ class App extends React.Component
       authenticated: false,
       requests: [],
       remove: '',
-      whitelist: ["Naamloos", "Notch"]
+      whitelist: ["Naamloos", "Notch"],
+      validated: false
     }
   }
 
@@ -46,16 +47,20 @@ class App extends React.Component
           <p>{process.env.REACT_APP_DESCRIPTION}</p>
           <p>Server IP: <code>{process.env.REACT_APP_MINECRAFT_IP}</code></p>
 
-          <Form onSubmit={this.SendRequest.bind(this)} noValidate>
+          <Form onSubmit={this.SendRequest.bind(this)} noValidate validated={this.state.validated}>
             <FormGroup>
               <Form.Floating className="mb-3">
                 <Form.Control 
+                  required
                   id='username' 
                   type='text' 
                   placeholder='Notch' 
                   value={this.state.username}
                   onChange={this.handleInput.bind(this)}
                   />
+                <Form.Control.Feedback type="invalid">
+                  A username is required!
+                </Form.Control.Feedback>
                 <Form.Label htmlFor='username'>Minecraft or Xbox Username?</Form.Label>
               </Form.Floating>
   
@@ -65,6 +70,7 @@ class App extends React.Component
                   type='radio' 
                   label='Java Edition' 
                   id='is_bedrock_player' 
+                  checked={!this.state.is_bedrock_player}
                   onChange={this.handleRadio.bind(this)}
                   value={false}
                   />
@@ -73,37 +79,46 @@ class App extends React.Component
                   name='bedrock' 
                   type='radio' 
                   label='Bedrock Edition' 
-                  id='is_bedrock_player' 
+                  id='is_bedrock_player'
+                  checked={this.state.is_bedrock_player}
                   onChange={this.handleRadio.bind(this)}
                   value={true}
                   />
               </div>
               
               <Form.Floating className="mb-3">
-                <Form.Control 
+                <Form.Control
+                  required
                   id='motivation' 
                   type='text'
                   placeholder='' 
                   onChange={this.handleInput.bind(this)}
                  />
+                <Form.Control.Feedback type="invalid">
+                  Please tell us why you want to join.
+                </Form.Control.Feedback>
                 <Form.Label htmlFor='motivation'>Why do you want to join?</Form.Label>
               </Form.Floating>
   
               <Form.Floating className="mb-3">
                 <Form.Control 
+                  required
                   id='contact' 
                   type='text'
                   placeholder='' 
                   onChange={this.handleInput.bind(this)}
                   />
+                <Form.Control.Feedback type="invalid">
+                  It is important that we can notify you when you receive access!
+                </Form.Control.Feedback>
                 <Form.Label htmlFor='motivation'>How can we reach you?</Form.Label>
               </Form.Floating>
   
               <Form.Floating className="mb-3">
                 <Form.Control id='referrer' type='text' placeholder='' onChange={this.handleInput.bind(this)}/>
-                <Form.Label htmlFor='referrer'>Who invited you?</Form.Label>
+                <Form.Label htmlFor='referrer'>(Optional) Who invited you?</Form.Label>
               </Form.Floating>
-              <Form.Control type='submit' value="Submit Whitelist Request"/>
+              <Button type='submit' variant='primary'>Submit Whitelist Request</Button>
             </FormGroup>
           </Form>
 
@@ -173,9 +188,23 @@ class App extends React.Component
     this.setState({[name]: enabled});
   }
 
+  validateForm(form)
+  {
+    var valid = form.checkValidity();
+    this.setState({validated: !valid});
+    console.log(valid);
+    return valid;
+  }
+
   async SendRequest(e)
   {
     e.preventDefault();
+
+    if(!this.validateForm(e.target))
+    {
+      return;
+    }
+
     const request = process.env.REACT_APP_API_ENDPOINT + "/whitelist/request";
     var req = 
     {
