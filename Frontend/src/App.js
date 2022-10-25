@@ -8,8 +8,11 @@ import {
   ListGroup,
   Navbar,
   Button,
+  Stack,
 } from "react-bootstrap";
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 class App extends React.Component {
   constructor(props) {
@@ -33,19 +36,32 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Navbar bg="dark" variant="dark" color="white" expand="lg">
-          <Container>
+        <Navbar bg="dark" variant="dark" color="white" expand="lg" sticky="top">
+          <Container className="p-1">
             <Navbar.Brand>{process.env.REACT_APP_NAME}</Navbar.Brand>
-
-            <Form className="d-flex" onSubmit={this.FetchRequests.bind(this)}>
-              <Form.Control
-                type="password"
-                id="password"
-                placeholder="Admin Login (RCON)"
-                onChange={this.handleInput.bind(this)}
-                disabled={this.state.authenticated}
-              />
-            </Form>
+            <Navbar.Text>
+              <Stack direction="horizontal" gap={3}>
+                <Form
+                  className="d-flex"
+                  onSubmit={this.FetchRequests.bind(this)}
+                >
+                  <Form.Control
+                    type="password"
+                    id="password"
+                    placeholder="Admin Login (RCON)"
+                    onChange={this.handleInput.bind(this)}
+                    disabled={this.state.authenticated}
+                  />
+                </Form>{" "}
+                <a href="https://github.com/Naamloos/MangoTango" target="_">
+                  <FontAwesomeIcon
+                    style={{ fontSize: "2em", color: "white", margin: 0 }}
+                    icon={faGithub}
+                  />
+                </a>
+                <div></div>
+              </Stack>
+            </Navbar.Text>
           </Container>
         </Navbar>
 
