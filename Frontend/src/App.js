@@ -9,6 +9,7 @@ import {
   Navbar,
   Button,
   Stack,
+  Modal,
 } from "react-bootstrap";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,6 +36,9 @@ class App extends React.Component {
       remove: "",
       whitelist: [],
       validated: false,
+      modal: false,
+      modalmessage: "Contents",
+      modaltitle: "Title",
     };
   }
 
@@ -249,8 +253,51 @@ class App extends React.Component {
         ) : (
           <></>
         )}
+
+        <Modal
+          show={this.state.modal}
+          onHide={() => {
+            this.setState({ modal: false });
+          }}
+          centered
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header>
+            <Modal.Title>{this.state.modaltitle}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{this.state.modalmessage}</Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                this.setState({ modal: false });
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
+  }
+
+  showMessage(title, description) {
+    var body;
+
+    if (Object.prototype.toString.call(description) === "[object String]") {
+      body = description;
+    } else if (description instanceof Error) {
+      body = description.message;
+    } else {
+      body = <code>{JSON.stringify(description)}</code>;
+    }
+
+    this.setState({
+      modal: true,
+      modaltitle: title,
+      modalmessage: body,
+    });
   }
 
   handleInput(e) {
@@ -302,9 +349,12 @@ class App extends React.Component {
       }
 
       var jsonresp = await resp.json();
-      alert("Succesfully sent your whitelist request!\nUUID: " + jsonresp.uuid);
+      this.showMessage(
+        "Success!",
+        "Succesfully sent your whitelist request!\nUUID: " + jsonresp.uuid
+      );
     } catch (error) {
-      alert(error.message);
+      this.showMessage("Oh no! anyway..", error);
     }
     return false;
   }
@@ -327,7 +377,7 @@ class App extends React.Component {
       this.setState({ authenticated: true, requests: list });
       await this.fetchCurrentWhitelist();
     } catch (error) {
-      alert(error.message);
+      this.showMessage("Oh no! anyway..", error);
     }
   }
 
@@ -344,10 +394,17 @@ class App extends React.Component {
       if (resp.status !== 200) {
         throw new Error(await resp.text());
       }
-      alert("Approved whitelist access for " + request.username);
+      this.showMessage(
+        "Approved!",
+        "Approved whitelist access for " +
+          request.username +
+          "! (" +
+          request.uuid +
+          ")"
+      );
       await this.FetchRequests(e);
     } catch (error) {
-      alert(error.message);
+      this.showMessage("Oh no! anyway..", error);
     }
   }
 
@@ -364,10 +421,17 @@ class App extends React.Component {
       if (resp.status !== 200) {
         throw new Error(await resp.text());
       }
-      alert("Denied whitelist access for " + request.username);
+      this.showMessage(
+        "Denied!",
+        "Denied whitelist access for " +
+          request.username +
+          "! (" +
+          request.uuid +
+          ")"
+      );
       await this.FetchRequests(e);
     } catch (error) {
-      alert(error.message);
+      this.showMessage("Oh no! anyway..", error);
     }
   }
 
@@ -384,7 +448,7 @@ class App extends React.Component {
       var jsonData = await resp.json();
       this.setState({ whitelist: jsonData });
     } catch (error) {
-      alert(error.message);
+      this.showMessage("Oh no! anyway..", error);
     }
   }
 }
