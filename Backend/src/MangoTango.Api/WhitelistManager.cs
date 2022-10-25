@@ -1,17 +1,14 @@
 ﻿using MangoTango.Api.Entities;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace MangoTango.Api
 {
     public class WhitelistManager
     {
-        private SemaphoreSlim semaphore;
+        private static readonly SemaphoreSlim _semaphore = new(1);
 
         public WhitelistManager()
         {
-            this.semaphore = new SemaphoreSlim(1);
-
             if (!File.Exists(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist.json")))
             {
                 var file = File.Create(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist.json"));
@@ -20,28 +17,28 @@ namespace MangoTango.Api
             }
         }
 
-        public async Task<List<WhitelistUser>> GetWhitelistAsync()
+        public ValueTask<List<WhitelistUser>> GetWhitelistAsync()
         {
-            semaphore.Wait();
+            _semaphore.Wait();
             var file = File.OpenRead(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist.json"));
             try
             {
-                return await JsonSerializer.DeserializeAsync<List<WhitelistUser>>(file);
+                return JsonSerializer.DeserializeAsync<List<WhitelistUser>>(file)!;
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 throw;
             }
             finally
             {
                 file.Close();
-                semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task SaveWhitelistAsync(List<WhitelistUser> users)
         {
-            semaphore.Wait();
+            _semaphore.Wait();
             var file = File.Create(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist.json"));
             try
             {
@@ -50,22 +47,22 @@ namespace MangoTango.Api
                     WriteIndented = true,
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
             finally
             {
                 file.Close();
-                semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task AddUserAsync(WhitelistUser user)
         {
-            var list = await this.GetWhitelistAsync();
+            var list = await GetWhitelistAsync();
             list.Add(user);
-            await this.SaveWhitelistAsync(list);
+            await SaveWhitelistAsync(list);
         }
     }
 }

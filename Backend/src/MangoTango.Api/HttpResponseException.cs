@@ -9,8 +9,8 @@ namespace MangoTango.Api
 
         public HttpResponseException(HttpStatusCode status, string description) : base()
         {
-            this.StatusCode = status;
-            this.Description = description;
+            StatusCode = status;
+            Description = description;
         }
     }
 }
