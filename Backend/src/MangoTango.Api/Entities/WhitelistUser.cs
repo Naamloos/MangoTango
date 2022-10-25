@@ -14,19 +14,19 @@ namespace MangoTango.Api.Entities
         public string Username { get; set; }
 
         [JsonConstructor]
-        public WhitelistUser(string uuid, string name)
+        public WhitelistUser(string uuid, string username)
         {
             if (string.IsNullOrWhiteSpace(uuid))
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(uuid));
             }
-            else if (string.IsNullOrWhiteSpace(name))
+            else if (string.IsNullOrWhiteSpace(username))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(username));
             }
 
             Uuid = uuid;
-            Username = name;
+            Username = username;
 
             // Invalid GUID
             if (!Guid.TryParse(Uuid, out Guid guid))
