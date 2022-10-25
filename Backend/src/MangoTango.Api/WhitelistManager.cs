@@ -17,13 +17,14 @@ namespace MangoTango.Api
             }
         }
 
-        public ValueTask<List<WhitelistUser>> GetWhitelistAsync()
+        public async Task<List<WhitelistUser>> GetWhitelistAsync()
         {
             _semaphore.Wait();
             var file = File.OpenRead(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist.json"));
             try
             {
-                return JsonSerializer.DeserializeAsync<List<WhitelistUser>>(file)!;
+                // Intentional await- finally has to be called AFTER returning.
+                return (await JsonSerializer.DeserializeAsync<List<WhitelistUser>>(file))!;
             }
             catch (Exception)
             {
