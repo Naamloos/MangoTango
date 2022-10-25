@@ -292,7 +292,7 @@ class App extends React.Component {
       const requests =
         process.env.REACT_APP_API_ENDPOINT + "/whitelist/requests";
       var resp = await fetch(requests, {
-        headers: { rcon_password: this.state.password },
+        headers: { "X-RCON-PASSWORD": this.state.password },
       });
 
       if (resp.status !== 200) {
@@ -313,7 +313,7 @@ class App extends React.Component {
       const approve =
         process.env.REACT_APP_API_ENDPOINT + "/whitelist/approve?uuid=" + uuid;
       var resp = await fetch(approve, {
-        headers: { rcon_password: this.state.password },
+        headers: { "X-RCON-PASSWORD": this.state.password },
         method: "POST",
       });
       if (resp.status !== 200) {
@@ -333,7 +333,7 @@ class App extends React.Component {
       const approve =
         process.env.REACT_APP_API_ENDPOINT + "/whitelist/deny?uuid=" + uuid;
       var resp = await fetch(approve, {
-        headers: { rcon_password: this.state.password },
+        headers: { "X-RCON-PASSWORD": this.state.password },
         method: "POST",
       });
       if (resp.status !== 200) {
