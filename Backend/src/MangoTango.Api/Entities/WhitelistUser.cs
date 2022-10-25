@@ -32,10 +32,12 @@ namespace MangoTango.Api.Entities
             if (!string.IsNullOrEmpty(Username))
                 return;
 
-            bool is_bedrock = guid.ToByteArray().Take(16).All(x => x == 0);
+            var bytes = guid.ToByteArray();
+
+            bool is_bedrock = bytes.Take(8).All(x => x == 0);
 
             if (is_bedrock)
-                FixBedrockListing(BitConverter.ToInt64(guid.ToByteArray().Skip(16).ToArray()));
+                FixBedrockListing(Convert.ToInt64(guid.ToString("N"), 16));
             else
                 FixJavaListing();
         }

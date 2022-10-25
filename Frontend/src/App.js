@@ -25,7 +25,7 @@ class App extends React.Component {
       authenticated: false,
       requests: [],
       remove: "",
-      whitelist: ["Naamloos", "Notch"],
+      whitelist: [],
       validated: false,
     };
   }
@@ -162,7 +162,9 @@ class App extends React.Component {
               </p>
               <ListGroup>
                 {Array.from(this.state.whitelist).map((player) => (
-                  <ListGroup.Item>{player}</ListGroup.Item>
+                  <ListGroup.Item>
+                    <b>{player.name}</b> ({player.uuid})
+                  </ListGroup.Item>
                 ))}
               </ListGroup>
             </Container>
@@ -301,6 +303,7 @@ class App extends React.Component {
 
       var list = await resp.json();
       this.setState({ authenticated: true, requests: list });
+      await this.fetchCurrentWhitelist();
     } catch (error) {
       alert(error.message);
     }
@@ -341,6 +344,23 @@ class App extends React.Component {
       }
       alert("Denied whitelist access for " + request.username);
       await this.FetchRequests(e);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async fetchCurrentWhitelist() {
+    try {
+      const whitelist = process.env.REACT_APP_API_ENDPOINT + "/whitelist";
+      var resp = await fetch(whitelist, {
+        headers: { "X-RCON-PASSWORD": this.state.password },
+        method: "GET",
+      });
+      if (resp.status !== 200) {
+        throw new Error(await resp.text());
+      }
+      var jsonData = await resp.json();
+      this.setState({ whitelist: jsonData });
     } catch (error) {
       alert(error.message);
     }

@@ -22,6 +22,19 @@ namespace MangoTango.Api.Controllers
             _whitelistManager = whitelistManager;
         }
 
+        [HttpGet]
+        public async Task<List<WhitelistUser>> IndexAsync([FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
+        {
+            // TODO: Hashing + IEnumerable<byte>.SequenceEquals
+            if (rconPassword != EnvironmentSettings.RconPassword)
+            {
+                _logger.LogWarning("{IpAddress} tried to access the whitelist requests with an invalid rcon password.", HttpContext.Connection.RemoteIpAddress);
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
+            }
+
+            return await _whitelistManager.GetWhitelistAsync();
+        }
+
         [HttpGet("requests")]
         public async Task<List<ResolvedWhitelistRequest>> GetRequestsAsync([FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
         {
