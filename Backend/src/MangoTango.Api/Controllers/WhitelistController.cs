@@ -23,10 +23,10 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpGet("requests")]
-        public async Task<List<ResolvedWhitelistRequest>> GetRequestsAsync([FromHeader] string rcon_password)
+        public async Task<List<ResolvedWhitelistRequest>> GetRequestsAsync([FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
         {
             // TODO: Hashing + IEnumerable<byte>.SequenceEquals
-            if (rcon_password != EnvironmentSettings.RconPassword)
+            if (rconPassword != EnvironmentSettings.RconPassword)
             {
                 _logger.LogWarning("{IpAddress} tried to access the whitelist requests with an invalid rcon password.", HttpContext.Connection.RemoteIpAddress);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
@@ -71,10 +71,10 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpPost("approve")]
-        public async Task ApproveAsync(string uuid, [FromServices] RCON minecraft, [FromHeader] string rcon_password)
+        public async Task ApproveAsync(string uuid, [FromServices] RCON minecraft, [FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
         {
             // TODO: Hashing + IEnumerable<byte>.SequenceEquals
-            if (rcon_password != EnvironmentSettings.RconPassword)
+            if (rconPassword != EnvironmentSettings.RconPassword)
             {
                 _logger.LogWarning("{IpAddress} tried to approve a whitelist request with an invalid rcon password.", HttpContext.Connection.RemoteIpAddress);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
@@ -103,10 +103,10 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpPost("deny")]
-        public async Task DenyAsync(string uuid, [FromServices] RCON minecraft, [FromHeader] string rcon_password)
+        public async Task DenyAsync(string uuid, [FromServices] RCON minecraft, [FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
         {
             // TODO: Hashing + IEnumerable<byte>.SequenceEquals
-            if (rcon_password != EnvironmentSettings.RconPassword)
+            if (rconPassword != EnvironmentSettings.RconPassword)
             {
                 _logger.LogWarning("{IpAddress} tried to deny a whitelist request with an invalid rcon password.", HttpContext.Connection.RemoteIpAddress);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
