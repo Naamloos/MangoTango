@@ -61,7 +61,7 @@ namespace MangoTango.Api.Controllers
             }
             finally
             {
-                var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
+                var username = (request.IsBedrockPlayer ? EnvironmentSettings.FloodgatePrefix : "") + request.Username;
                 await minecraft.ConnectAsync();
                 var title = $"/tellraw @a [\"\",{{\"text\":\"{username}\",\"italic\":true,\"color\":\"light_purple\"}}," +
                 $"{{\"text\":\" has just requested whitelist access.\",\"color\":\"white\"}}]";
@@ -88,7 +88,7 @@ namespace MangoTango.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound, "No such request found! Has this user already been approved?");
             }
 
-            var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
+            var username = (request.IsBedrockPlayer ? EnvironmentSettings.FloodgatePrefix : "") + request.Username;
 
             await _whitelistManager.AddUserAsync(new WhitelistUser(request.Uuid, username));
             await _requestManager.RemoveRequestAsync(uuid);
@@ -103,7 +103,7 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpPost("deny")]
-        public async Task DenyAsync(string uuid, [FromServices] RCON minecraft, [FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
+        public async Task DenyAsync(string uuid, [FromHeader(Name = "X-RCON-PASSWORD")] string rconPassword)
         {
             // TODO: Hashing + IEnumerable<byte>.SequenceEquals
             if (rconPassword != EnvironmentSettings.RconPassword)

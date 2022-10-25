@@ -67,7 +67,7 @@ namespace MangoTango.Api.Entities
 
         public static async Task<ResolvedWhitelistRequest> FromRequestAsync(WhitelistRequest request, IMemoryCache cache)
         {
-            string qualifiedUsername = (request.IsBedrockPlayer ? "." : "") + request.Username;
+            string qualifiedUsername = (request.IsBedrockPlayer ? EnvironmentSettings.FloodgatePrefix : "") + request.Username;
             string uuid;
 
             if (!cache.TryGetValue(qualifiedUsername, out uuid))
@@ -129,7 +129,7 @@ namespace MangoTango.Api.Entities
 
         private static async Task<string> GetBedrockUuidFallbackAsync(string username)
         {
-            var xbl_key = EnvironmentSettings.OpenXBL_Key;
+            var xbl_key = EnvironmentSettings.OpenXBLKey;
             if (string.IsNullOrEmpty(xbl_key))
                 throw new InvalidOperationException("Invalid Xbox Username"); // since this is fallback for when the other one errors.
 
@@ -148,7 +148,7 @@ namespace MangoTango.Api.Entities
                 throw new InvalidOperationException("Invalid Xbox Username");
             }
 
-            var uuid = long.Parse(xuid.GetString()).ToString("X").PadLeft(32, '0');
+            var uuid = long.Parse(xuid.GetString()!).ToString("X").PadLeft(32, '0');
             return new Guid(uuid).ToString(); // Conversion to valid uuid for floodgate
         }
     }
