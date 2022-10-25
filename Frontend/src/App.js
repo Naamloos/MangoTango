@@ -13,6 +13,11 @@ import {
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import {
+  faArrowUpFromBracket,
+  faCheckDouble,
+  faBomb,
+} from "@fortawesome/free-solid-svg-icons";
 
 class App extends React.Component {
   constructor(props) {
@@ -162,7 +167,8 @@ class App extends React.Component {
                 </Form.Label>
               </Form.Floating>
               <Button type="submit" variant="primary">
-                Submit Whitelist Request
+                <FontAwesomeIcon icon={faArrowUpFromBracket} /> Submit Whitelist
+                Request
               </Button>
             </FormGroup>
           </Form>
@@ -225,14 +231,14 @@ class App extends React.Component {
                         data={JSON.stringify(request)}
                         onClick={this.Approve.bind(this)}
                       >
-                        Allow Access
+                        <FontAwesomeIcon icon={faCheckDouble} /> Allow Access
                       </Button>{" "}
                       <Button
                         variant="danger"
                         data={JSON.stringify(request)}
                         onClick={this.Deny.bind(this)}
                       >
-                        Deny Access
+                        <FontAwesomeIcon icon={faBomb} /> Deny Access
                       </Button>{" "}
                     </Card.Body>
                   </Card>
