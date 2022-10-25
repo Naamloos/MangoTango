@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System.Net;
-using System.Reflection;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MangoTango.Api.Entities
@@ -9,32 +8,66 @@ namespace MangoTango.Api.Entities
     public class WhitelistRequest
     {
         [JsonPropertyName("username")]
-        public string Username { get; set; } = "";
+        public string Username { get; init; }
 
         [JsonPropertyName("referrer")]
-        public string Referrer { get; set; } = "";
+        public string Referrer { get; init; }
 
         [JsonPropertyName("motivation")]
-        public string Motivation { get; set; } = "";
+        public string Motivation { get; init; }
 
         [JsonPropertyName("contact")]
-        public string Contact { get; set; } = "";
+        public string Contact { get; init; }
 
         [JsonPropertyName("is_bedrock_player")]
-        public bool IsBedrockPlayer { get; set; } = false;
+        public bool IsBedrockPlayer { get; init; }
+
+        public WhitelistRequest(string username, string referrer, string motivation, string contact, bool isBedrockPlayer)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(username));
+            }
+            else if (string.IsNullOrWhiteSpace(referrer))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(referrer));
+            }
+            else if (string.IsNullOrWhiteSpace(motivation))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(motivation));
+            }
+            else if (string.IsNullOrWhiteSpace(contact))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(contact));
+            }
+
+            Username = username;
+            Referrer = referrer;
+            Motivation = motivation;
+            Contact = contact;
+            IsBedrockPlayer = isBedrockPlayer;
+        }
     }
 
     public class ResolvedWhitelistRequest : WhitelistRequest
     {
         [JsonPropertyName("uuid")]
-        public string Uuid { get; set; } = "";
+        public string Uuid { get; init; }
 
-        public ResolvedWhitelistRequest() { }
+        public ResolvedWhitelistRequest(string uuid, string username, string referrer, string motivation, string contact, bool isBedrockPlayer) : base(username, referrer, motivation, contact, isBedrockPlayer)
+        {
+            if (string.IsNullOrWhiteSpace(uuid))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(uuid));
+            }
+
+            Uuid = uuid;
+        }
 
         public static async Task<ResolvedWhitelistRequest> FromRequestAsync(WhitelistRequest request, IMemoryCache cache)
         {
             string qualifiedUsername = (request.IsBedrockPlayer ? "." : "") + request.Username;
-            string uuid = "";
+            string uuid;
 
             if (!cache.TryGetValue(qualifiedUsername, out uuid))
             {
@@ -55,10 +88,7 @@ namespace MangoTango.Api.Entities
             if (string.IsNullOrEmpty(uuid))
                 throw new Exception("Cached error value! :)");
 
-            var resolved = new ResolvedWhitelistRequest();
-            resolved.copyProperties(request);
-            resolved.Uuid = uuid;
-
+            var resolved = new ResolvedWhitelistRequest(uuid, request.Username, request.Referrer, request.Motivation, request.Contact, request.IsBedrockPlayer);
             return resolved;
         }
 
@@ -68,12 +98,12 @@ namespace MangoTango.Api.Entities
             var data = await http.GetAsync($"https://api.mojang.com/users/profiles/minecraft/{username}");
 
             if (data.StatusCode != HttpStatusCode.OK)
-                throw new Exception("Invalid Minecraft Java Username");
+                throw new InvalidOperationException("Invalid Minecraft Java Username");
 
-            var json = JsonObject.Parse(await data.Content.ReadAsStringAsync());
-            var uuid = json["id"].GetValue<string>();
-
-            return new Guid(uuid).ToString();
+            var json = await JsonSerializer.DeserializeAsync<JsonElement>(data.Content.ReadAsStream());
+            return !json.TryGetProperty("id", out var uuid)
+                ? throw new InvalidOperationException("Invalid Minecraft Java Username")
+                : new Guid(uuid.GetString()!).ToString();
         }
 
         private static async Task<string> GetBedrockUuidAsync(string username)
@@ -82,22 +112,18 @@ namespace MangoTango.Api.Entities
             var data = await http.GetAsync($"https://api.geysermc.org/v2/xbox/xuid/{username}");
 
             if (data.StatusCode != HttpStatusCode.OK)
-                throw new Exception("Invalid Xbox Username");
-
-            var json = JsonObject.Parse(await data.Content.ReadAsStringAsync());
-            var uuid = json["xuid"].GetValue<long>().ToString("X").PadLeft(32, '0');
-
-            // Conversion to valid uuid for floodgate
-            return new Guid(uuid).ToString();
-        }
-
-        private void copyProperties(object other)
-        {
-            foreach (PropertyInfo propertyInfo in other.GetType().GetProperties())
             {
-                object value = propertyInfo.GetValue(other, null);
-                if (null != value) propertyInfo.SetValue(this, value, null);
+                throw new InvalidOperationException("Invalid Xbox Username");
             }
+
+            var json = await JsonSerializer.DeserializeAsync<JsonElement>(data.Content.ReadAsStream());
+            if (!json.TryGetProperty("xuid", out var xuid))
+            {
+                throw new InvalidOperationException("Invalid Xbox Username");
+            }
+
+            var uuid = xuid.GetInt64().ToString("X").PadLeft(32, '0');
+            return new Guid(uuid).ToString(); // Conversion to valid uuid for floodgate
         }
     }
 }

@@ -5,12 +5,10 @@ namespace MangoTango.Api
 {
     public class RequestManager
     {
-        private SemaphoreSlim semaphore;
+        private static readonly SemaphoreSlim _semaphore = new(1);
 
         public RequestManager()
         {
-            this.semaphore = new SemaphoreSlim(1);
-
             if (!File.Exists(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist_requests.json")))
             {
                 var file = File.Create(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist_requests.json"));
@@ -19,28 +17,28 @@ namespace MangoTango.Api
             }
         }
 
-        public async Task<List<ResolvedWhitelistRequest>> GetRequestsAsync()
+        public ValueTask<List<ResolvedWhitelistRequest>> GetRequestsAsync()
         {
-            semaphore.Wait();
+            _semaphore.Wait();
             var file = File.OpenRead(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist_requests.json"));
             try
             {
-                return await JsonSerializer.DeserializeAsync<List<ResolvedWhitelistRequest>>(file);
+                return JsonSerializer.DeserializeAsync<List<ResolvedWhitelistRequest>>(file)!;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
             finally
             {
                 file.Close();
-                semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task SaveRequestsAsync(List<ResolvedWhitelistRequest> users)
         {
-            semaphore.Wait();
+            _semaphore.Wait();
             var file = File.Create(Path.Combine(EnvironmentSettings.ServerDataPath, "whitelist_requests.json"));
             try
             {
@@ -49,29 +47,29 @@ namespace MangoTango.Api
                     WriteIndented = true,
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
             finally
             {
                 file.Close();
-                semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task AddRequestAsync(ResolvedWhitelistRequest request)
         {
-            var list = await this.GetRequestsAsync();
+            var list = await GetRequestsAsync();
             list.Add(request);
-            await this.SaveRequestsAsync(list);
+            await SaveRequestsAsync(list);
         }
 
         public async Task RemoveRequestAsync(string uuid)
         {
-            var list = await this.GetRequestsAsync();
+            var list = await GetRequestsAsync();
             list.RemoveAll(x => x.Uuid == uuid);
-            await this.SaveRequestsAsync(list);
+            await SaveRequestsAsync(list);
         }
     }
 }
