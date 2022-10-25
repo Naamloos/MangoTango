@@ -51,18 +51,51 @@ namespace MangoTango.Api.Entities
 
                 if (data.StatusCode != HttpStatusCode.OK)
                 {
+                    FixBedrockListingFallback(xuid);
                     return;
                 }
 
                 var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
                 if (!json.TryGetProperty("gamertag", out var username))
                 {
+                    FixBedrockListingFallback(xuid);
                     return;
                 }
 
                 Username = EnvironmentSettings.FloodgatePrefix + username.GetString();
             }
             catch(Exception) { } // silently catch, no biggie if we fail.
+        }
+
+        private void FixBedrockListingFallback(long xuid)
+        {
+            var xbl_key = EnvironmentSettings.OpenXBLKey;
+            if (string.IsNullOrEmpty(xbl_key))
+                throw new InvalidOperationException("Invalid Xbox Username"); // since this is fallback for when the other one errors.
+
+            var http = new HttpClient();
+            http.DefaultRequestHeaders.Add("X-Authorization", xbl_key);
+            var data = http.GetAsync($"https://xbl.io/api/v2/friends/search?id={xuid}").GetAwaiter().GetResult();
+
+            if (data.StatusCode != HttpStatusCode.OK)
+            {
+                throw new InvalidOperationException("Invalid Xbox Username");
+            }
+
+            var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
+
+            var settings = json.GetProperty("profileUsers")[0]
+                .GetProperty("settings");
+            var settingsLen = settings.GetArrayLength();
+
+            for(int i = 0; i < settingsLen; i++)
+            {
+                if(settings[i].GetProperty("id").GetString() == "Gamertag")
+                {
+                    Username = EnvironmentSettings.FloodgatePrefix + settings[i].GetProperty("value").GetString();
+                    return;
+                }
+            }
         }
 
         private void FixJavaListing()
