@@ -2,7 +2,6 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using XboxWebApi.Authentication;
 using static System.Net.WebRequestMethods;
 
 namespace MangoTango.Api.Entities
