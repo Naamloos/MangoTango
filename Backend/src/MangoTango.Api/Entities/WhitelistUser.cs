@@ -58,7 +58,7 @@ namespace MangoTango.Api.Entities
                     return;
                 }
 
-                this.Username = username.GetString();
+                this.Username = "." + username.GetString();
             }
             catch(Exception) { } // silently catch, no biggie if we fail.
         }
@@ -81,7 +81,7 @@ namespace MangoTango.Api.Entities
                     return;
                 }
 
-                this.Username = username.GetString();
+                this.Username = "." + username.GetString();
             }
             catch (Exception) { } // silently catch, no biggie if we fail.
         }

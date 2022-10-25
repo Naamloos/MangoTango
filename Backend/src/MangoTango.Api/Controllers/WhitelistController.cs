@@ -90,7 +90,7 @@ namespace MangoTango.Api.Controllers
 
             var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
 
-            await _whitelistManager.AddUserAsync(new WhitelistUser(request.Uuid, request.Username));
+            await _whitelistManager.AddUserAsync(new WhitelistUser(request.Uuid, username));
             await _requestManager.RemoveRequestAsync(uuid);
             await minecraft.ConnectAsync();
             await minecraft.SendCommandAsync("/whitelist reload");
