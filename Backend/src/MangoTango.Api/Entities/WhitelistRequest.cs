@@ -2,6 +2,8 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using XboxWebApi.Authentication;
+using static System.Net.WebRequestMethods;
 
 namespace MangoTango.Api.Entities
 {
@@ -113,7 +115,7 @@ namespace MangoTango.Api.Entities
 
             if (data.StatusCode != HttpStatusCode.OK)
             {
-                throw new InvalidOperationException("Invalid Xbox Username");
+                return await GetBedrockUuidFallbackAsync(username);
             }
 
             var json = await JsonSerializer.DeserializeAsync<JsonElement>(data.Content.ReadAsStream());
@@ -123,6 +125,31 @@ namespace MangoTango.Api.Entities
             }
 
             var uuid = xuid.GetInt64().ToString("X").PadLeft(32, '0');
+            return new Guid(uuid).ToString(); // Conversion to valid uuid for floodgate
+        }
+
+        private static async Task<string> GetBedrockUuidFallbackAsync(string username)
+        {
+            var xbl_key = EnvironmentSettings.OpenXBL_Key;
+            if (string.IsNullOrEmpty(xbl_key))
+                throw new InvalidOperationException("Invalid Xbox Username"); // since this is fallback for when the other one errors.
+
+            var http = new HttpClient();
+            http.DefaultRequestHeaders.Add("X-Authorization", xbl_key);
+            var data = await http.GetAsync($"https://xbl.io/api/v2/friends/search?gt={username}");
+
+            if (data.StatusCode != HttpStatusCode.OK)
+            {
+                throw new InvalidOperationException("Invalid Xbox Username");
+            }
+
+            var json = await JsonSerializer.DeserializeAsync<JsonElement>(data.Content.ReadAsStream());
+            if (!json.GetProperty("profileUsers")[0].TryGetProperty("id", out var xuid))
+            {
+                throw new InvalidOperationException("Invalid Xbox Username");
+            }
+
+            var uuid = long.Parse(xuid.GetString()).ToString("X").PadLeft(32, '0');
             return new Guid(uuid).ToString(); // Conversion to valid uuid for floodgate
         }
     }

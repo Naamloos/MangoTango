@@ -20,10 +20,6 @@ namespace MangoTango.Api.Entities
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(uuid));
             }
-            else if (string.IsNullOrWhiteSpace(username))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(username));
-            }
 
             Uuid = uuid;
             Username = username;
@@ -53,13 +49,13 @@ namespace MangoTango.Api.Entities
 
                 if (data.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new InvalidOperationException();
+                    return;
                 }
 
                 var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
                 if (!json.TryGetProperty("gamertag", out var username))
                 {
-                    throw new InvalidOperationException();
+                    return;
                 }
 
                 this.Username = username.GetString();
@@ -76,13 +72,13 @@ namespace MangoTango.Api.Entities
 
                 if (data.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new InvalidOperationException();
+                    return;
                 }
 
                 var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
                 if (!json.TryGetProperty("name", out var username))
                 {
-                    throw new InvalidOperationException();
+                    return;
                 }
 
                 this.Username = username.GetString();
