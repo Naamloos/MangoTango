@@ -7,7 +7,7 @@ namespace MangoTango.Api.Entities
         [JsonPropertyName("uuid")]
         public string Uuid { get; init; }
 
-        [JsonPropertyName("username")]
+        [JsonPropertyName("name")]
         public string Username { get; init; }
 
         public WhitelistUser(string uuid, string username)
