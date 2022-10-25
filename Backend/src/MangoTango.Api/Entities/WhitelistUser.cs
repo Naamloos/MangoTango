@@ -53,13 +53,13 @@ namespace MangoTango.Api.Entities
 
                 if (data.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new InvalidOperationException("Invalid Xbox Username");
+                    throw new InvalidOperationException();
                 }
 
                 var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
                 if (!json.TryGetProperty("gamertag", out var username))
                 {
-                    throw new InvalidOperationException("Invalid xuid");
+                    throw new InvalidOperationException();
                 }
 
                 this.Username = username.GetString();
@@ -76,13 +76,13 @@ namespace MangoTango.Api.Entities
 
                 if (data.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new InvalidOperationException("Invalid Xbox Username");
+                    throw new InvalidOperationException();
                 }
 
                 var json = JsonSerializer.Deserialize<JsonElement>(data.Content.ReadAsStream());
                 if (!json.TryGetProperty("name", out var username))
                 {
-                    throw new InvalidOperationException("Invalid xuid");
+                    throw new InvalidOperationException();
                 }
 
                 this.Username = username.GetString();
