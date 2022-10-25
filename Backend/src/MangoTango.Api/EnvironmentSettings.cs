@@ -16,11 +16,11 @@ namespace MangoTango.Api
 
         public static string ServerDataPath
         {
-            get 
+            get
             {
                 var path = Environment.GetEnvironmentVariable("SERVER_DATA_PATH") ?? Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "server");
 
-                if(!Directory.Exists(path))
+                if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
                 return path;

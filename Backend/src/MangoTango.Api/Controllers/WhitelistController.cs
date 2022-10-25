@@ -35,12 +35,12 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpPost("request")]
-        public async Task<ResolvedWhitelistRequest> PostRequestAsync(WhitelistRequest request, [FromServices] RCON minecraft, [FromServices]IMemoryCache cache)
+        public async Task<ResolvedWhitelistRequest> PostRequestAsync(WhitelistRequest request, [FromServices] RCON minecraft, [FromServices] IMemoryCache cache)
         {
             var resolved = await ResolvedWhitelistRequest.FromRequestAsync(request, cache);
 
             var requests = await _requestManager.GetRequestsAsync();
-            if(requests.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
+            if (requests.Any(x => x.Uuid?.ToLower() == resolved.Uuid?.ToLower()))
             {
                 throw new HttpResponseException(HttpStatusCode.Conflict, "You have already requested whitelist access!");
             }
@@ -56,7 +56,8 @@ namespace MangoTango.Api.Controllers
             {
                 await _requestManager.AddRequestAsync(resolved);
                 return resolved;
-            }finally
+            }
+            finally
             {
                 var username = (request.IsBedrockPlayer ? "." : "") + request.Username;
                 await minecraft.ConnectAsync();
@@ -67,16 +68,16 @@ namespace MangoTango.Api.Controllers
         }
 
         [HttpPost("approve")]
-        public async Task ApproveAsync(string uuid, [FromServices]RCON minecraft, [FromHeader]string rcon_password)
+        public async Task ApproveAsync(string uuid, [FromServices] RCON minecraft, [FromHeader] string rcon_password)
         {
-            if(rcon_password != EnvironmentSettings.RconPassword)
+            if (rcon_password != EnvironmentSettings.RconPassword)
             {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Incorrect RCON password!");
             }
 
             var requests = await _requestManager.GetRequestsAsync();
             var request = requests.FirstOrDefault(x => x.Uuid == uuid);
-            if(request == null)
+            if (request == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, "No such request found! Has this user already been approved?");
             }

@@ -28,7 +28,7 @@ namespace MangoTango.Api
             {
                 return await JsonSerializer.DeserializeAsync<List<WhitelistUser>>(file);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }

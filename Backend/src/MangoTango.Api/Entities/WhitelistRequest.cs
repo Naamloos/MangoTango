@@ -36,7 +36,7 @@ namespace MangoTango.Api.Entities
             string qualifiedUsername = (request.IsBedrockPlayer ? "." : "") + request.Username;
             string uuid = "";
 
-            if(!cache.TryGetValue(qualifiedUsername, out uuid))
+            if (!cache.TryGetValue(qualifiedUsername, out uuid))
             {
                 var entry = cache.CreateEntry(qualifiedUsername)
                     .SetSlidingExpiration(TimeSpan.FromMinutes(30));
@@ -45,7 +45,7 @@ namespace MangoTango.Api.Entities
                     uuid = await (request.IsBedrockPlayer ? GetBedrockUuidAsync(request.Username) : GetJavaUuidAsync(request.Username));
                     entry.SetValue(uuid);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     entry.SetValue("");
                     throw;
