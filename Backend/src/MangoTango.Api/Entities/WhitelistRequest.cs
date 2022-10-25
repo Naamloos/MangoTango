@@ -28,10 +28,10 @@ namespace MangoTango.Api.Entities
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(username));
             }
-            else if (string.IsNullOrWhiteSpace(referrer))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(referrer));
-            }
+            //else if (string.IsNullOrWhiteSpace(referrer))
+            //{
+            //    throw new ArgumentException("Value cannot be null or whitespace.", nameof(referrer));
+            //}
             else if (string.IsNullOrWhiteSpace(motivation))
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(motivation));
