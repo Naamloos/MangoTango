@@ -15,8 +15,8 @@ class App extends React.Component {
 
     this.state = {
       showModal: this.showModal.bind(this),
-      authenticated: Storage.hasStoredPassword(),
-      token: Storage.getStoredPassword(),
+      authenticated: false,
+      token: "",
     };
 
     const token = Storage.getStoredPassword();
@@ -26,10 +26,14 @@ class App extends React.Component {
         this.setState({
           authenticated: true,
           token: newToken,
-        })
+        });
       },
       () => {
         Storage.clearStoredPassword(); // error
+        this.setState({
+          authenticated: false,
+          token: "",
+        })
       }
     );
   }

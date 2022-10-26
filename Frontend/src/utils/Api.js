@@ -42,7 +42,7 @@ class ApiClient {
 
   refreshToken(token, onSuccess, onError) {
     const url = process.env.REACT_APP_API_ENDPOINT + "/auth/refresh";
-    this.#doRequest(url, "POST", null, null, token).then(
+    this.#doRequest(url, "GET", null, null, token).then(
       (response) => onSuccess(response.token),
       (error) => onError(error)
     );
