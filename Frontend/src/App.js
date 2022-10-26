@@ -6,6 +6,8 @@ import RequestForm from "./components/RequestForm.js";
 import SiteNavbar from "./components/SiteNavbar.js";
 import AdminPanel from "./components/AdminPanel.js";
 import ModalPopup from "./components/ModalPopup.js";
+import { Storage } from "./utils/Storage.js";
+import { Api } from "./utils/Api.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -13,9 +15,22 @@ class App extends React.Component {
 
     this.state = {
       showModal: this.showModal.bind(this),
-      authenticated: false,
-      rconPassword: "",
+      authenticated: Storage.hasStoredPassword(),
+      rconPassword: Storage.getStoredPassword(),
     };
+
+    const password = Storage.getStoredPassword();
+    Api.checkAuth(password,
+      () => {
+        this.setState({
+          authenticated: true,
+          rconPassword: password,
+        })
+      },
+      () => {
+        Storage.clearStoredPassword(); // error
+      }
+    );
   }
 
   registerModal(showModal) {
@@ -29,6 +44,7 @@ class App extends React.Component {
           showModal={this.showModal.bind(this)}
           authenticated={this.state.authenticated}
           authenticate={this.authenticate.bind(this)}
+          logOut={this.logOut.bind(this)}
         />
 
         <RequestForm showModal={this.showModal.bind(this)} />
@@ -37,6 +53,7 @@ class App extends React.Component {
           authenticated={this.state.authenticated}
           rconPassword={this.state.rconPassword}
           showModal={this.showModal.bind(this)}
+          logOut={this.logOut.bind(this)}
         />
 
         <ModalPopup register={this.registerModal.bind(this)} />
@@ -45,7 +62,13 @@ class App extends React.Component {
   }
 
   authenticate(rconPassword) {
+    Storage.setStoredPassword(rconPassword);
     this.setState({ authenticated: true, rconPassword: rconPassword });
+  }
+
+  logOut() {
+    Storage.clearStoredPassword();
+    this.setState({ authenticated: false, rconPassword: null });
   }
 
   showModal(title, message) {

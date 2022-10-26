@@ -15,7 +15,7 @@ class Whitelist extends React.Component {
       (response) => {
         this.setState({ whitelist: response });
       },
-      (error) => {}
+      (error) => { }
     );
   }
 

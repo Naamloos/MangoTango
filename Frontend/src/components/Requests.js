@@ -1,5 +1,7 @@
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Button, Stack } from "react-bootstrap";
 import { Api } from "../utils/Api.js";
 import Request from "./Request.js";
 
@@ -20,7 +22,7 @@ class Requests extends React.Component {
       (response) => {
         this.setState({ requests: response });
       },
-      (error) => {}
+      (error) => { this.props.logOut(); }
     );
   }
 
@@ -32,10 +34,10 @@ class Requests extends React.Component {
         this.props.showModal(
           "Approved access!",
           "Approved whitelist access for " +
-            request.username +
-            "! (" +
-            request.uuid +
-            ")"
+          request.username +
+          "! (" +
+          request.uuid +
+          ")"
         );
         this.refresh();
       },
@@ -56,10 +58,10 @@ class Requests extends React.Component {
         this.props.showModal(
           "Denied access!",
           "Denied whitelist access for " +
-            request.username +
-            "! (" +
-            request.uuid +
-            ")"
+          request.username +
+          "! (" +
+          request.uuid +
+          ")"
         );
         this.refresh();
       },
@@ -75,7 +77,12 @@ class Requests extends React.Component {
   render() {
     return (
       <Container className="p-3">
-        <h3>Current requests</h3>
+        <Stack direction="horizontal" gap={2}>
+          <h3>Current requests</h3>
+          <Button variant="secondary" size="sm" onClick={this.refresh.bind(this)}>
+            <FontAwesomeIcon icon={faArrowsRotate} />
+          </Button>
+        </Stack>
         {this.state.requests.length < 1 ? <p>None right now.</p> : <></>}
         {Array.from(this.state.requests).map((request) => (
           <Request

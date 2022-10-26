@@ -1,7 +1,8 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Container, Form, Navbar, Stack } from "react-bootstrap";
+import { Container, Form, Navbar, Stack, Button } from "react-bootstrap";
 import { Api } from "../utils/Api.js";
 
 class SiteNavbar extends React.Component {
@@ -43,15 +44,23 @@ class SiteNavbar extends React.Component {
           <Navbar.Brand>{process.env.REACT_APP_NAME}</Navbar.Brand>
           <Navbar.Text>
             <Stack direction="horizontal" gap={3}>
-              <Form className="d-flex" onSubmit={this.handleLogin.bind(this)}>
-                <Form.Control
-                  type="password"
-                  id="rconPassword"
-                  placeholder="Admin Login (RCON)"
-                  onChange={this.handleInput.bind(this)}
-                  disabled={this.props.authenticated}
-                />
-              </Form>{" "}
+              {this.props.authenticated ?
+                (<Button variant="danger" onClick={this.props.logOut}>
+                  <Stack gap={1} direction="horizontal">
+                    <FontAwesomeIcon icon={faRightFromBracket} />
+                    <>Log Out</>
+                  </Stack>
+                </Button>)
+                :
+                (<Form className="d-flex" onSubmit={this.handleLogin.bind(this)}>
+                  <Form.Control
+                    type="password"
+                    id="rconPassword"
+                    placeholder="Admin Login (RCON)"
+                    onChange={this.handleInput.bind(this)}
+                    disabled={this.props.authenticated}
+                  />
+                </Form>)}
               <a href="https://github.com/Naamloos/MangoTango" target="_">
                 <FontAwesomeIcon
                   style={{ fontSize: "2em", color: "white", margin: 0 }}
