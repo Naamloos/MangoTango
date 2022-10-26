@@ -12,7 +12,7 @@ namespace MangoTango.Api.Entities
         public string Username { get; init; }
 
         [JsonPropertyName("referrer")]
-        public string Referrer { get; init; }
+        public string? Referrer { get; init; }
 
         [JsonPropertyName("motivation")]
         public string Motivation { get; init; }
