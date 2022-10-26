@@ -16,15 +16,16 @@ class App extends React.Component {
     this.state = {
       showModal: this.showModal.bind(this),
       authenticated: Storage.hasStoredPassword(),
-      rconPassword: Storage.getStoredPassword(),
+      token: Storage.getStoredPassword(),
     };
 
-    const password = Storage.getStoredPassword();
-    Api.checkAuth(password,
-      () => {
+    const token = Storage.getStoredPassword();
+    Api.refreshToken(token,
+      (newToken) => {
+        Storage.setStoredPassword(newToken);
         this.setState({
           authenticated: true,
-          rconPassword: password,
+          token: newToken,
         })
       },
       () => {
@@ -51,7 +52,7 @@ class App extends React.Component {
 
         <AdminPanel
           authenticated={this.state.authenticated}
-          rconPassword={this.state.rconPassword}
+          token={this.state.token}
           showModal={this.showModal.bind(this)}
           logOut={this.logOut.bind(this)}
         />
@@ -61,14 +62,14 @@ class App extends React.Component {
     );
   }
 
-  authenticate(rconPassword) {
-    Storage.setStoredPassword(rconPassword);
-    this.setState({ authenticated: true, rconPassword: rconPassword });
+  authenticate(token) {
+    Storage.setStoredPassword(token);
+    this.setState({ authenticated: true, token: token });
   }
 
   logOut() {
     Storage.clearStoredPassword();
-    this.setState({ authenticated: false, rconPassword: null });
+    this.setState({ authenticated: false, token: null });
   }
 
   showModal(title, message) {

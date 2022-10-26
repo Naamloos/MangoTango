@@ -24,6 +24,7 @@ services:
       - BASE_PATH=/ # Base path for your API. Change this if your API is not served on the root path.
       - SERVER_DATA_PATH=/var/minecraft # You probably wouldn't want to modify this. We're mapping this to a volume.
       - FLOODGATE_PREFIX=. # Change this if your prefix differs.
+      - TOKEN_ISSUER=someone # CHANGEME IMPORTANT used for authentication.
       #- OPENXBL_KEY= #Add if you want to use OpenXBL as XUID resolver fallback
     volumes:
       - minecraft-data:/var/minecraft # Binding to minecraft data directory so we can find whitelist.json

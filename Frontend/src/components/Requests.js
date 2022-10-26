@@ -18,7 +18,7 @@ class Requests extends React.Component {
 
   refresh() {
     Api.getRequests(
-      this.props.rconPassword,
+      this.props.token,
       (response) => {
         this.setState({ requests: response });
       },
@@ -29,7 +29,7 @@ class Requests extends React.Component {
   approve(request) {
     Api.approveWhitelistUser(
       request.uuid,
-      this.props.rconPassword,
+      this.props.token,
       () => {
         this.props.showModal(
           "Approved access!",
@@ -53,7 +53,7 @@ class Requests extends React.Component {
   deny(request) {
     Api.denyWhitelistUser(
       request.uuid,
-      this.props.rconPassword,
+      this.props.token,
       () => {
         this.props.showModal(
           "Denied access!",

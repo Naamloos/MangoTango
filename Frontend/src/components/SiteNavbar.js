@@ -14,14 +14,15 @@ class SiteNavbar extends React.Component {
   handleLogin(e) {
     e.preventDefault();
 
-    Api.checkAuth(
+    Api.login(
       this.state.rconPassword,
-      () => {
+      (token) => {
         this.props.showModal(
           "Successfully authenticated!",
           "Your RCON password was correct. Welcome!"
         );
-        this.props.authenticate(this.state.rconPassword);
+        this.props.authenticate(token);
+        this.setState({ rconPassword: "" });
       },
       () => {
         this.props.showModal(

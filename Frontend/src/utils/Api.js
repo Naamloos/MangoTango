@@ -1,15 +1,16 @@
 class ApiClient {
-  #doRequest(url, method, body, rconPassword) {
+  #doRequest(url, method, body, rconPassword, token) {
     return new Promise(async (success, error) => {
       const options = {
         method: "GET",
         headers: { "content-type": "application/json" },
       };
 
-      if (rconPassword !== undefined)
+      if (rconPassword !== null)
         options.headers["X-RCON-PASSWORD"] = rconPassword;
       if (body !== null) options.body = JSON.stringify(body);
       if (method !== undefined) options.method = method;
+      if (token !== null) options.headers["Authorization"] = "Bearer " + token;
 
       try {
         const response = await fetch(url, options);
@@ -31,10 +32,18 @@ class ApiClient {
     });
   }
 
-  checkAuth(rconPassword, onSuccess, onError) {
-    const url = process.env.REACT_APP_API_ENDPOINT + "/whitelist/checkauth";
-    this.#doRequest(url, "POST", null, rconPassword).then(
-      () => onSuccess(),
+  login(rconPassword, onSuccess, onError) {
+    const url = process.env.REACT_APP_API_ENDPOINT + "/auth/login";
+    this.#doRequest(url, "POST", null, rconPassword, null).then(
+      (response) => onSuccess(response.token),
+      (error) => onError(error)
+    );
+  }
+
+  refreshToken(token, onSuccess, onError) {
+    const url = process.env.REACT_APP_API_ENDPOINT + "/auth/refresh";
+    this.#doRequest(url, "POST", null, null, token).then(
+      (response) => onSuccess(response.token),
       (error) => onError(error)
     );
   }
@@ -47,39 +56,39 @@ class ApiClient {
     );
   }
 
-  approveWhitelistUser(uuid, rconPassword, onSuccess, onError) {
+  approveWhitelistUser(uuid, token, onSuccess, onError) {
     const url =
       process.env.REACT_APP_API_ENDPOINT + "/whitelist/approve?uuid=" + uuid;
 
-    this.#doRequest(url, "POST", null, rconPassword).then(
+    this.#doRequest(url, "POST", null, null, token).then(
       (response) => onSuccess(response),
       (error) => onError(error)
     );
   }
 
-  denyWhitelistUser(uuid, rconPassword, onSuccess, onError) {
+  denyWhitelistUser(uuid, token, onSuccess, onError) {
     const url =
       process.env.REACT_APP_API_ENDPOINT + "/whitelist/deny?uuid=" + uuid;
 
-    this.#doRequest(url, "POST", null, rconPassword).then(
+    this.#doRequest(url, "POST", null, null, token).then(
       (response) => onSuccess(response),
       (error) => onError(error)
     );
   }
 
-  getWhitelist(rconPassword, onSuccess, onError) {
+  getWhitelist(token, onSuccess, onError) {
     const url = process.env.REACT_APP_API_ENDPOINT + "/whitelist";
 
-    this.#doRequest(url, "GET", null, rconPassword).then(
+    this.#doRequest(url, "GET", null, null, token).then(
       (response) => onSuccess(response),
       (error) => onError(error)
     );
   }
 
-  getRequests(rconPassword, onSuccess, onError) {
+  getRequests(token, onSuccess, onError) {
     const url = process.env.REACT_APP_API_ENDPOINT + "/whitelist/requests";
 
-    this.#doRequest(url, "GET", null, rconPassword).then(
+    this.#doRequest(url, "GET", null, null, token).then(
       (response) => onSuccess(response),
       (error) => onError(error)
     );

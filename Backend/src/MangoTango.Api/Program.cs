@@ -1,6 +1,9 @@
 using AspNetCoreRateLimit;
 using CoreRCON;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Text;
 
 namespace MangoTango.Api
 {
@@ -48,6 +51,21 @@ namespace MangoTango.Api
 
             builder.Services.AddInMemoryRateLimiting();
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = EnvironmentSettings.TokenIssuer,
+                        ValidAudience = EnvironmentSettings.TokenIssuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(EnvironmentSettings.SecurityKey)
+                    };
+                });
+
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add<HttpResponseExceptionFilter>();
@@ -76,8 +94,9 @@ namespace MangoTango.Api
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 
 namespace MangoTango.Api
 {
@@ -11,6 +12,31 @@ namespace MangoTango.Api
         public static string BasePath => Environment.GetEnvironmentVariable("BASE_PATH") ?? "/";
         public static string OpenXBLKey => Environment.GetEnvironmentVariable("OPENXBL_KEY") ?? "";
         public static string FloodgatePrefix => Environment.GetEnvironmentVariable("FLOODGATE_PREFIX") ?? ".";
+        public static string TokenIssuer => Environment.GetEnvironmentVariable("TOKEN_ISSUER") ?? "253020E0-D2DF-487E-96C9-D5B025C54C9A";
+        public static byte[] SecurityKey
+        {
+            get
+            {
+                if (keyCache != null)
+                    return keyCache;
+
+                var path = Path.Combine(ServerDataPath, "mangotango.key");
+                if (File.Exists(path))
+                {
+                    keyCache = File.ReadAllBytes(path);
+                    return keyCache!;
+                }
+
+                var newKey = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString("N"));
+                var file = File.Create(path);
+                file.Write(newKey);
+                file.Flush();
+                keyCache = newKey;
+                return keyCache!;
+            }
+        }
+        private static byte[]? keyCache = null;
+
         public static string ServerDataPath
         {
             get

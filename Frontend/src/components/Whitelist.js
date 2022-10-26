@@ -11,7 +11,7 @@ class Whitelist extends React.Component {
 
   componentDidMount() {
     Api.getWhitelist(
-      this.props.rconPassword,
+      this.props.token,
       (response) => {
         this.setState({ whitelist: response });
       },

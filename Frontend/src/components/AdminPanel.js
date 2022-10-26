@@ -14,11 +14,11 @@ class AdminPanel extends React.Component {
     return (
       <>
         <Whitelist
-          rconPassword={this.props.rconPassword}
+          token={this.props.token}
           logOut={this.props.logOut} />
         <Requests
           showModal={this.props.showModal}
-          rconPassword={this.props.rconPassword}
+          token={this.props.token}
           logOut={this.props.logOut} />
       </>
     );

@@ -1,18 +1,18 @@
 class StorageManager {
     hasStoredPassword() {
-        return window.localStorage.getItem("rconPassword") !== null;
+        return window.localStorage.getItem("mangotango_token") !== null;
     }
 
     getStoredPassword() {
-        return window.localStorage.getItem("rconPassword");
+        return window.localStorage.getItem("mangotango_token");
     }
 
     setStoredPassword(password) {
-        window.localStorage.setItem("rconPassword", password);
+        window.localStorage.setItem("mangotango_token", password);
     }
 
     clearStoredPassword() {
-        window.localStorage.removeItem("rconPassword");
+        window.localStorage.removeItem("mangotango_token");
     }
 }
 
