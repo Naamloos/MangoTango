@@ -13,6 +13,7 @@ namespace MangoTango.Api
         public static string OpenXBLKey => Environment.GetEnvironmentVariable("OPENXBL_KEY") ?? "";
         public static string FloodgatePrefix => Environment.GetEnvironmentVariable("FLOODGATE_PREFIX") ?? ".";
         public static string TokenIssuer => Environment.GetEnvironmentVariable("TOKEN_ISSUER") ?? "253020E0-D2DF-487E-96C9-D5B025C54C9A";
+        public static ushort ExpirationHours => ushort.TryParse(Environment.GetEnvironmentVariable("EXPIRATION_HOURS"), out ushort value) ? value : (ushort)48;
         public static byte[] SecurityKey
         {
             get

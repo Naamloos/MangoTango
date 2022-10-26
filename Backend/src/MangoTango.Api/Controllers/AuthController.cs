@@ -36,7 +36,7 @@ namespace MangoTango.Api.Controllers
             var token = new JwtSecurityToken(EnvironmentSettings.TokenIssuer, 
                 EnvironmentSettings.TokenIssuer, 
                 null, 
-                expires: DateTime.Now.AddDays(1), 
+                expires: DateTime.Now.AddHours(EnvironmentSettings.ExpirationHours), 
                 signingCredentials: credentials);
 
             return new TokenResponse() { Token = new JwtSecurityTokenHandler().WriteToken(token) };
