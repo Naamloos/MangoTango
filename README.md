@@ -4,7 +4,7 @@ A simple web panel for Minecraft servers using Geyser+Floodgate to handle whitel
 
 This application was initially written in about half a day.
 
-This application is called after my Minecraft server that is as well called MangoTango. That server is named after one of my cats though 🙂
+This application is called after my Minecraft server that is as well called MangoTango. That server is named after ~~one of my cats though 🙂~~ It's named after my ex's cat
 
 [Support Discord `#mangotango`](https://discord.gg/hMRWUTa)
 
